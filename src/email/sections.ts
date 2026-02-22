@@ -1,5 +1,5 @@
 import type { LeagueSection, SportEvent } from "../events/types.ts";
-import { formatDateDisplay, formatTimeDisplay } from "../utils/dates.ts";
+import { formatDateDisplay, formatTimeDisplay, isToday } from "../utils/dates.ts";
 
 function escapeHtml(str: string): string {
   return str
@@ -29,12 +29,18 @@ function renderGameRow(
       <p style="margin:0;font-size:12px;color:#52525b;line-height:1.4">${escapeHtml(dateStr)}</p>
       <p style="margin:1px 0 0;font-size:11px;font-weight:600;color:#c9500e;text-transform:uppercase;letter-spacing:0.04em">FINAL</p>`;
   } else {
+    const today = isToday(event.date);
+    const dateLabel = today ? "Today" : escapeHtml(dateStr);
+    const dateColor = today ? "#c9500e" : "#52525b";
+    const dateWeight = today ? "font-weight:700;" : "";
+    const timeColor = today ? "#c9500e" : "#a1a1aa";
+    const timeWeight = today ? "font-weight:700;" : "";
     const broadcastHtml = event.broadcast
       ? `<span style="margin:0 4px;color:#d4d4d8">&middot;</span>${escapeHtml(event.broadcast)}`
       : "";
     rightHtml = `
-      <p style="margin:0;font-size:12px;color:#52525b;line-height:1.4">${escapeHtml(dateStr)}</p>
-      <p style="margin:1px 0 0;font-size:12px;color:#a1a1aa">${escapeHtml(timeStr)}${broadcastHtml}</p>`;
+      <p style="margin:0;font-size:12px;color:${dateColor};${dateWeight}line-height:1.4">${dateLabel}</p>
+      <p style="margin:1px 0 0;font-size:12px;color:${timeColor};${timeWeight}">${escapeHtml(timeStr)}${broadcastHtml}</p>`;
   }
 
   // Two-team events: stacked layout

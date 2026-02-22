@@ -61,6 +61,11 @@ export function formatTimeDisplay(date: Date | string): string {
   return `${time} ET`;
 }
 
+/** Check if a date falls on today in ET */
+export function isToday(date: Date): boolean {
+  return formatDateESPN(date) === formatDateESPN(new Date());
+}
+
 /** Format a date range for the header: "Feb 22 – Mar 7, 2026" */
 export function formatDateRange(start: Date, end: Date): string {
   const startParts = new Intl.DateTimeFormat("en-US", {
