@@ -14,6 +14,8 @@ export type SportEvent = {
   awayTeamAbbr?: string;
   homeScore?: number;
   awayScore?: number;
+  homeRecord?: string;
+  awayRecord?: string;
   /** Set by favorites prioritization */
   favorited?: boolean;
   favoritedSide?: "home" | "away" | "both";

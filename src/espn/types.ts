@@ -62,6 +62,10 @@ export type ESPNCompetitor = {
   };
   score?: string;
   winner?: boolean;
+  records?: Array<{
+    type: string;
+    summary: string;
+  }>;
 };
 
 export type ESPNBroadcast = {

@@ -73,6 +73,18 @@ describe("normalizeMatchupEvent", () => {
     expect(typeof result!.awayTeamAbbr).toBe("string");
   });
 
+  test("extracts home and away records from fixture", () => {
+    const event = events[0]!;
+    const result = normalizeMatchupEvent(event, "nba");
+
+    expect(result).not.toBeNull();
+    expect(result!.homeRecord).toBeDefined();
+    expect(result!.awayRecord).toBeDefined();
+    // NBA fixture records are in "W-L" format
+    expect(result!.homeRecord).toMatch(/^\d+-\d+$/);
+    expect(result!.awayRecord).toMatch(/^\d+-\d+$/);
+  });
+
   test("returns null for event with no competitors", () => {
     const fakeEvent = {
       id: "1",

@@ -40,9 +40,13 @@ function renderGameRow(
         awayIndicator = `<span style="color:#a1a1aa;font-weight:700;margin-left:4px;font-size:12px">T</span>`;
         homeIndicator = `<span style="color:#a1a1aa;font-weight:700;margin-left:4px;font-size:12px">T</span>`;
       }
-      matchupHtml = `${awayStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.awayTeam)} ${event.awayScore}</span>${awayIndicator} <span style="color:#a1a1aa;font-weight:400;margin:0 6px">@</span> ${homeStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.homeTeam)} ${event.homeScore}</span>${homeIndicator}`;
+      const awayRecordResult = event.awayRecord ? `<span style="color:#a1a1aa;font-size:11px;font-weight:400;margin-left:4px">(${escapeHtml(event.awayRecord)})</span>` : "";
+      const homeRecordResult = event.homeRecord ? `<span style="color:#a1a1aa;font-size:11px;font-weight:400;margin-left:4px">(${escapeHtml(event.homeRecord)})</span>` : "";
+      matchupHtml = `${awayStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.awayTeam)} ${event.awayScore}</span>${awayIndicator}${awayRecordResult} <span style="color:#a1a1aa;font-weight:400;margin:0 6px">@</span> ${homeStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.homeTeam)} ${event.homeScore}</span>${homeIndicator}${homeRecordResult}`;
     } else {
-      matchupHtml = `${awayStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.awayTeam)}</span> <span style="color:#a1a1aa;font-weight:400;margin:0 6px">@</span> ${homeStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.homeTeam)}</span>`;
+      const awayRecordUpcoming = event.awayRecord ? `<span style="color:#a1a1aa;font-size:11px;font-weight:400;margin-left:4px">(${escapeHtml(event.awayRecord)})</span>` : "";
+      const homeRecordUpcoming = event.homeRecord ? `<span style="color:#a1a1aa;font-size:11px;font-weight:400;margin-left:4px">(${escapeHtml(event.homeRecord)})</span>` : "";
+      matchupHtml = `${awayStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.awayTeam)}</span>${awayRecordUpcoming} <span style="color:#a1a1aa;font-weight:400;margin:0 6px">@</span> ${homeStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.homeTeam)}</span>${homeRecordUpcoming}`;
     }
   } else if (event.headline) {
     const headlineStar = event.favorited ? star : "";

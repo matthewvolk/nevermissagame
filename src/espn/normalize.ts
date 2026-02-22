@@ -1,4 +1,4 @@
-import type { ESPNEvent } from "./types.ts";
+import type { ESPNCompetitor, ESPNEvent } from "./types.ts";
 import type { EventStatus, SportEvent } from "../events/types.ts";
 import type { LeagueConfig } from "../config.ts";
 import { createLogger } from "../utils/logger.ts";
@@ -52,6 +52,10 @@ function extractVenue(event: ESPNEvent): string | undefined {
   return venue.fullName;
 }
 
+function extractRecord(competitor: ESPNCompetitor): string | undefined {
+  return competitor.records?.find((r) => r.type === "total")?.summary;
+}
+
 export function normalizeMatchupEvent(
   event: ESPNEvent,
   leagueId: string,
@@ -83,6 +87,8 @@ export function normalizeMatchupEvent(
       awayTeam,
       homeTeamAbbr: home.team?.abbreviation,
       awayTeamAbbr: away.team?.abbreviation,
+      homeRecord: extractRecord(home),
+      awayRecord: extractRecord(away),
       homeScore:
         home.score !== undefined ? parseInt(home.score, 10) : undefined,
       awayScore:
