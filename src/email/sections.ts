@@ -19,18 +19,25 @@ function renderGameRow(
   const timeStr = formatTimeDisplay(event.date);
 
   // Build matchup text
+  const star = `<span style="color:#EFC54D;margin:0 3px">&#9733;</span>`;
+  const awayStarred = event.favorited && (event.favoritedSide === "away" || event.favoritedSide === "both");
+  const homeStarred = event.favorited && (event.favoritedSide === "home" || event.favoritedSide === "both");
   let matchupHtml: string;
   if (event.awayTeam && event.homeTeam) {
+    const awayStar = awayStarred ? star : "";
+    const homeStar = homeStarred ? star : "";
     if (isResult && event.awayScore !== undefined && event.homeScore !== undefined) {
       // Show scores for results
-      matchupHtml = `<span style="font-weight:600;color:#18181b">${escapeHtml(event.awayTeam)} ${event.awayScore}</span> <span style="color:#a1a1aa;font-weight:400;margin:0 6px">@</span> <span style="font-weight:600;color:#18181b">${escapeHtml(event.homeTeam)} ${event.homeScore}</span>`;
+      matchupHtml = `${awayStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.awayTeam)} ${event.awayScore}</span> <span style="color:#a1a1aa;font-weight:400;margin:0 6px">@</span> ${homeStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.homeTeam)} ${event.homeScore}</span>`;
     } else {
-      matchupHtml = `<span style="font-weight:600;color:#18181b">${escapeHtml(event.awayTeam)}</span> <span style="color:#a1a1aa;font-weight:400;margin:0 6px">@</span> <span style="font-weight:600;color:#18181b">${escapeHtml(event.homeTeam)}</span>`;
+      matchupHtml = `${awayStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.awayTeam)}</span> <span style="color:#a1a1aa;font-weight:400;margin:0 6px">@</span> ${homeStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.homeTeam)}</span>`;
     }
   } else if (event.headline) {
-    matchupHtml = `<span style="font-weight:600;color:#18181b">${escapeHtml(event.headline)}</span>`;
+    const headlineStar = event.favorited ? star : "";
+    matchupHtml = `${headlineStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.headline)}</span>`;
   } else {
-    matchupHtml = `<span style="font-weight:600;color:#18181b">${escapeHtml(event.name)}</span>`;
+    const fallbackStar = event.favorited ? star : "";
+    matchupHtml = `${fallbackStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.name)}</span>`;
   }
 
   // Note line

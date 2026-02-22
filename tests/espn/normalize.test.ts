@@ -62,6 +62,17 @@ describe("normalizeMatchupEvent", () => {
     expect(result!.date).toBeInstanceOf(Date);
   });
 
+  test("populates homeTeamAbbr and awayTeamAbbr from fixture", () => {
+    const event = events[0]!;
+    const result = normalizeMatchupEvent(event, "nba");
+
+    expect(result).not.toBeNull();
+    expect(result!.homeTeamAbbr).toBeDefined();
+    expect(result!.awayTeamAbbr).toBeDefined();
+    expect(typeof result!.homeTeamAbbr).toBe("string");
+    expect(typeof result!.awayTeamAbbr).toBe("string");
+  });
+
   test("returns null for event with no competitors", () => {
     const fakeEvent = {
       id: "1",

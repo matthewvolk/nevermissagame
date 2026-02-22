@@ -7,6 +7,12 @@ import {
 } from "../utils/dates.ts";
 import type { LeagueSection, SportEvent } from "./types.ts";
 import { createLogger } from "../utils/logger.ts";
+import { type UserPreferences, EMPTY_PREFERENCES } from "../favorites/types.ts";
+import {
+  reorderLeagues,
+  prioritizeTeamEvents,
+  truncateWithFavorites,
+} from "../favorites/apply.ts";
 
 const log = createLogger("upcoming");
 
@@ -16,6 +22,7 @@ function sleep(ms: number): Promise<void> {
 
 export async function fetchUpcomingEvents(
   referenceDate?: Date,
+  preferences: UserPreferences = EMPTY_PREFERENCES,
 ): Promise<LeagueSection[]> {
   const start = referenceDate ?? todayET();
   const end = new Date(start);
@@ -25,7 +32,10 @@ export async function fetchUpcomingEvents(
   log.info(`Fetching upcoming events for ${dateRange}`);
 
   const sections: LeagueSection[] = [];
-  const enabledLeagues = LEAGUES.filter((l) => l.enabled && l.espnPath);
+  const enabledLeagues = reorderLeagues(
+    LEAGUES.filter((l) => l.enabled && l.espnPath),
+    preferences,
+  );
 
   for (let i = 0; i < enabledLeagues.length; i++) {
     const league = enabledLeagues[i]!;
@@ -43,12 +53,19 @@ export async function fetchUpcomingEvents(
 
     if (upcoming.length === 0) continue;
 
+    // Prioritize favorite team events, then truncate
+    const prioritized = prioritizeTeamEvents(upcoming, league.id, preferences);
+    const { events: displayed, totalCount } = truncateWithFavorites(
+      prioritized,
+      league.maxEvents,
+    );
+
     sections.push({
       leagueId: league.id,
       leagueName: league.name,
       colors: league.colors,
-      events: upcoming.slice(0, league.maxEvents),
-      totalCount: upcoming.length,
+      events: displayed,
+      totalCount,
     });
   }
 

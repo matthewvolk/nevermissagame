@@ -81,6 +81,8 @@ export function normalizeMatchupEvent(
       status: mapStatus(event.status.type.state),
       homeTeam,
       awayTeam,
+      homeTeamAbbr: home.team?.abbreviation,
+      awayTeamAbbr: away.team?.abbreviation,
       homeScore:
         home.score !== undefined ? parseInt(home.score, 10) : undefined,
       awayScore:
@@ -128,6 +130,8 @@ export function normalizeFightEvent(
     const competition = event.competitions?.[0];
     let homeTeam: string | undefined;
     let awayTeam: string | undefined;
+    let homeTeamAbbr: string | undefined;
+    let awayTeamAbbr: string | undefined;
 
     if (competition?.competitors && competition.competitors.length >= 2) {
       const c1 = competition.competitors[0];
@@ -140,6 +144,8 @@ export function normalizeFightEvent(
         c2?.athlete?.displayName ??
         c2?.team?.displayName ??
         "Fighter 2";
+      awayTeamAbbr = c1?.team?.abbreviation;
+      homeTeamAbbr = c2?.team?.abbreviation;
     }
 
     return {
@@ -151,6 +157,8 @@ export function normalizeFightEvent(
       status: mapStatus(event.status.type.state),
       homeTeam,
       awayTeam,
+      homeTeamAbbr,
+      awayTeamAbbr,
       headline: event.name,
       venue: extractVenue(event),
       broadcast: extractBroadcast(event),

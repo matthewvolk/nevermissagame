@@ -3,6 +3,12 @@ import { fetchLeagueEvents } from "../espn/scoreboard.ts";
 import { yesterdayET, formatDateESPN } from "../utils/dates.ts";
 import type { LeagueSection } from "./types.ts";
 import { createLogger } from "../utils/logger.ts";
+import { type UserPreferences, EMPTY_PREFERENCES } from "../favorites/types.ts";
+import {
+  reorderLeagues,
+  prioritizeTeamEvents,
+  truncateWithFavorites,
+} from "../favorites/apply.ts";
 
 const log = createLogger("results");
 
@@ -12,13 +18,17 @@ function sleep(ms: number): Promise<void> {
 
 export async function fetchYesterdayResults(
   referenceDate?: Date,
+  preferences: UserPreferences = EMPTY_PREFERENCES,
 ): Promise<LeagueSection[]> {
   const yesterday = referenceDate ?? yesterdayET();
   const dateRange = formatDateESPN(yesterday);
   log.info(`Fetching yesterday's results for ${dateRange}`);
 
   const sections: LeagueSection[] = [];
-  const enabledLeagues = LEAGUES.filter((l) => l.enabled && l.espnPath);
+  const enabledLeagues = reorderLeagues(
+    LEAGUES.filter((l) => l.enabled && l.espnPath),
+    preferences,
+  );
 
   for (let i = 0; i < enabledLeagues.length; i++) {
     const league = enabledLeagues[i]!;
@@ -36,12 +46,19 @@ export async function fetchYesterdayResults(
 
     if (completed.length === 0) continue;
 
+    // Prioritize favorite team events, then truncate
+    const prioritized = prioritizeTeamEvents(completed, league.id, preferences);
+    const { events: displayed, totalCount } = truncateWithFavorites(
+      prioritized,
+      league.maxEvents,
+    );
+
     sections.push({
       leagueId: league.id,
       leagueName: league.name,
       colors: league.colors,
-      events: completed.slice(0, league.maxEvents),
-      totalCount: completed.length,
+      events: displayed,
+      totalCount,
     });
   }
 

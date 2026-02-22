@@ -10,8 +10,13 @@ export type SportEvent = {
   /** For matchup sports */
   homeTeam?: string;
   awayTeam?: string;
+  homeTeamAbbr?: string;
+  awayTeamAbbr?: string;
   homeScore?: number;
   awayScore?: number;
+  /** Set by favorites prioritization */
+  favorited?: boolean;
+  favoritedSide?: "home" | "away" | "both";
   /** For non-matchup sports (golf, F1, UFC, boxing) */
   headline?: string;
   venue?: string;

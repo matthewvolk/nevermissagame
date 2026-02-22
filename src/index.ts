@@ -3,15 +3,19 @@ import { fetchYesterdayResults } from "./events/results.ts";
 import { buildEmailHtml } from "./email/template.ts";
 import { sendEmail } from "./email/send.ts";
 import { createLogger } from "./utils/logger.ts";
+import { createDefaultProvider } from "./favorites/provider.ts";
 
 const log = createLogger("main");
 
 async function main() {
   log.info("Starting Sports Forecast email generation");
 
+  const provider = createDefaultProvider();
+  const preferences = await provider.getPreferences();
+
   const [results, upcoming] = await Promise.all([
-    fetchYesterdayResults(),
-    fetchUpcomingEvents(),
+    fetchYesterdayResults(undefined, preferences),
+    fetchUpcomingEvents(undefined, preferences),
   ]);
 
   log.info(

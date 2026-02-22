@@ -1,0 +1,6 @@
+{
+  "favoriteLeagues": ["mlb"],
+  "favoriteTeams": {
+    "mlb": ["SD"]
+  }
+}

@@ -2,6 +2,7 @@ import { fetchUpcomingEvents } from "./events/upcoming.ts";
 import { fetchYesterdayResults } from "./events/results.ts";
 import { buildEmailHtml } from "./email/template.ts";
 import { createLogger } from "./utils/logger.ts";
+import { createDefaultProvider } from "./favorites/provider.ts";
 import { writeFileSync } from "fs";
 import { resolve } from "path";
 
@@ -22,6 +23,9 @@ async function main() {
 
   log.info("Fetching data for preview...");
 
+  const provider = createDefaultProvider();
+  const preferences = await provider.getPreferences();
+
   // Compute yesterday relative to reference date
   let yesterdayDate: Date | undefined;
   if (referenceDate) {
@@ -30,8 +34,8 @@ async function main() {
   }
 
   const [results, upcoming] = await Promise.all([
-    fetchYesterdayResults(yesterdayDate),
-    fetchUpcomingEvents(referenceDate),
+    fetchYesterdayResults(yesterdayDate, preferences),
+    fetchUpcomingEvents(referenceDate, preferences),
   ]);
 
   log.info(
