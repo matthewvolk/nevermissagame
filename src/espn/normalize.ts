@@ -194,6 +194,10 @@ export function normalizeFightEvent(
     let homeTeamAbbr: string | undefined;
     let awayTeamAbbr: string | undefined;
 
+    let homeRecord: string | undefined;
+    let awayRecord: string | undefined;
+    let homeWinner: boolean | undefined;
+
     if (competition?.competitors && competition.competitors.length >= 2) {
       const c1 = competition.competitors[0];
       const c2 = competition.competitors[1];
@@ -207,6 +211,15 @@ export function normalizeFightEvent(
         "Fighter 2";
       awayTeamAbbr = c1?.team?.abbreviation;
       homeTeamAbbr = c2?.team?.abbreviation;
+      if (c1) awayRecord = extractRecord(c1);
+      if (c2) homeRecord = extractRecord(c2);
+
+      // ESPN sets winner: true on the winning competitor
+      if (c2?.winner === true) {
+        homeWinner = true;
+      } else if (c1?.winner === true) {
+        homeWinner = false;
+      }
     }
 
     return {
@@ -220,6 +233,9 @@ export function normalizeFightEvent(
       awayTeam,
       homeTeamAbbr,
       awayTeamAbbr,
+      homeRecord,
+      awayRecord,
+      homeWinner,
       headline: event.name,
       venue: extractVenue(event),
       broadcast: extractBroadcast(event),

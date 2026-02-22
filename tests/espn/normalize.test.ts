@@ -171,6 +171,37 @@ describe("normalizeFightEvent", () => {
     expect(result!.leagueId).toBe("ufc");
     expect(result!.date).toBeInstanceOf(Date);
   });
+
+  test("extracts homeWinner when winner flag is set", () => {
+    // First event/competition: competitors[0] is Wes Schultz (away, winner:true)
+    // so homeWinner should be false (the away fighter won)
+    const event = events[0]!;
+    const result = normalizeFightEvent(event, "ufc");
+
+    expect(result).not.toBeNull();
+    expect(result!.homeWinner).toBe(false);
+    expect(result!.status).toBe("completed");
+  });
+
+  test("extracts records from fight competitors", () => {
+    const event = events[0]!;
+    const result = normalizeFightEvent(event, "ufc");
+
+    expect(result).not.toBeNull();
+    expect(result!.homeRecord).toBeDefined();
+    expect(result!.awayRecord).toBeDefined();
+    expect(result!.homeRecord).toMatch(/^\d+-\d+-\d+$/);
+    expect(result!.awayRecord).toMatch(/^\d+-\d+-\d+$/);
+  });
+
+  test("homeWinner is undefined for scheduled fights", () => {
+    // Second event is still scheduled (both winner: false)
+    const event = events[1]!;
+    const result = normalizeFightEvent(event, "ufc");
+
+    expect(result).not.toBeNull();
+    expect(result!.homeWinner).toBeUndefined();
+  });
 });
 
 describe("normalizeEvents", () => {

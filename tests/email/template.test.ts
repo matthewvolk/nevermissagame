@@ -129,6 +129,42 @@ describe("buildEmailHtml", () => {
     expect(html).toContain("-7");
   });
 
+  test("shows W/L indicators for fight results using homeWinner flag", () => {
+    const ufcResults: LeagueSection[] = [
+      {
+        leagueId: "ufc",
+        leagueName: "UFC",
+        colors: { bg: "#d20a0a", text: "#ffffff" },
+        events: [
+          {
+            id: "100",
+            leagueId: "ufc",
+            name: "Fighter A vs Fighter B",
+            shortName: "UFC Fight Night",
+            date: new Date("2026-02-21T00:00:00Z"),
+            status: "completed",
+            homeTeam: "Fighter B",
+            awayTeam: "Fighter A",
+            homeWinner: true,
+            homeRecord: "10-2-0",
+            awayRecord: "8-3-0",
+          },
+        ],
+        totalCount: 1,
+      },
+    ];
+
+    const html = buildEmailHtml(ufcResults, [], new Date("2026-02-22"));
+    // Home fighter (Fighter B) won
+    expect(html).toContain('Fighter B</span><span style="color:#16a34a;font-weight:700;margin-left:4px;font-size:12px">W</span>');
+    expect(html).toContain('Fighter A</span><span style="color:#dc2626;font-weight:700;margin-left:4px;font-size:12px">L</span>');
+    // Records should be shown
+    expect(html).toContain("(10-2-0)");
+    expect(html).toContain("(8-3-0)");
+    // FINAL should be shown
+    expect(html).toContain("FINAL");
+  });
+
   test("shows +N more when truncated", () => {
     const section: LeagueSection = {
       leagueId: "nba",

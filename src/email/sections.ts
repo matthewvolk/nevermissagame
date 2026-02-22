@@ -128,21 +128,33 @@ function renderGameRow(
     let awayLineHtml: string;
     let homeLineHtml: string;
 
-    if (isResult && event.awayScore !== undefined && event.homeScore !== undefined) {
+    const hasScoreResult = isResult && event.awayScore !== undefined && event.homeScore !== undefined;
+    const hasWinnerResult = isResult && event.homeWinner !== undefined;
+
+    if (hasScoreResult || hasWinnerResult) {
       let awayIndicator: string;
       let homeIndicator: string;
       let awayWeight: number;
       let homeWeight: number;
-      if (event.awayScore > event.homeScore) {
-        awayIndicator = `<span style="color:#16a34a;font-weight:700;margin-left:4px;font-size:12px">W</span>`;
-        homeIndicator = `<span style="color:#dc2626;font-weight:700;margin-left:4px;font-size:12px">L</span>`;
-        awayWeight = 600;
-        homeWeight = 400;
-      } else if (event.homeScore > event.awayScore) {
+
+      // Determine W/L from scores or from the winner flag
+      let homeWon: boolean | null;
+      if (hasScoreResult) {
+        homeWon = event.homeScore! > event.awayScore! ? true : event.awayScore! > event.homeScore! ? false : null;
+      } else {
+        homeWon = event.homeWinner!;
+      }
+
+      if (homeWon === true) {
         awayIndicator = `<span style="color:#dc2626;font-weight:700;margin-left:4px;font-size:12px">L</span>`;
         homeIndicator = `<span style="color:#16a34a;font-weight:700;margin-left:4px;font-size:12px">W</span>`;
         awayWeight = 400;
         homeWeight = 600;
+      } else if (homeWon === false) {
+        awayIndicator = `<span style="color:#16a34a;font-weight:700;margin-left:4px;font-size:12px">W</span>`;
+        homeIndicator = `<span style="color:#dc2626;font-weight:700;margin-left:4px;font-size:12px">L</span>`;
+        awayWeight = 600;
+        homeWeight = 400;
       } else {
         awayIndicator = `<span style="color:#a1a1aa;font-weight:700;margin-left:4px;font-size:12px">T</span>`;
         homeIndicator = `<span style="color:#a1a1aa;font-weight:700;margin-left:4px;font-size:12px">T</span>`;
@@ -151,8 +163,10 @@ function renderGameRow(
       }
       const awayRecord = event.awayRecord ? `<span style="color:#a1a1aa;font-size:11px;font-weight:400;margin-left:4px">(${escapeHtml(event.awayRecord)})</span>` : "";
       const homeRecord = event.homeRecord ? `<span style="color:#a1a1aa;font-size:11px;font-weight:400;margin-left:4px">(${escapeHtml(event.homeRecord)})</span>` : "";
-      awayLineHtml = `<span style="font-weight:${awayWeight};color:#18181b">${escapeHtml(event.awayTeam)} ${event.awayScore}</span>${awayIndicator}${awayRecord}`;
-      homeLineHtml = `<span style="font-weight:${homeWeight};color:#18181b">${escapeHtml(event.homeTeam)} ${event.homeScore}</span>${homeIndicator}${homeRecord}`;
+      const awayScoreStr = event.awayScore !== undefined ? ` ${event.awayScore}` : "";
+      const homeScoreStr = event.homeScore !== undefined ? ` ${event.homeScore}` : "";
+      awayLineHtml = `<span style="font-weight:${awayWeight};color:#18181b">${escapeHtml(event.awayTeam)}${awayScoreStr}</span>${awayIndicator}${awayRecord}`;
+      homeLineHtml = `<span style="font-weight:${homeWeight};color:#18181b">${escapeHtml(event.homeTeam)}${homeScoreStr}</span>${homeIndicator}${homeRecord}`;
     } else {
       const awayRecord = event.awayRecord ? `<span style="color:#a1a1aa;font-size:11px;font-weight:400;margin-left:4px">(${escapeHtml(event.awayRecord)})</span>` : "";
       const homeRecord = event.homeRecord ? `<span style="color:#a1a1aa;font-size:11px;font-weight:400;margin-left:4px">(${escapeHtml(event.homeRecord)})</span>` : "";

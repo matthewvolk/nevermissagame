@@ -21,6 +21,8 @@ export type SportEvent = {
   awayTeamAbbr?: string;
   homeScore?: number;
   awayScore?: number;
+  /** True when home competitor won (for fight events without numeric scores) */
+  homeWinner?: boolean;
   homeRecord?: string;
   awayRecord?: string;
   /** Set by favorites prioritization */
