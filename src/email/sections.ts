@@ -27,8 +27,20 @@ function renderGameRow(
     const awayStar = awayStarred ? star : "";
     const homeStar = homeStarred ? star : "";
     if (isResult && event.awayScore !== undefined && event.homeScore !== undefined) {
-      // Show scores for results
-      matchupHtml = `${awayStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.awayTeam)} ${event.awayScore}</span> <span style="color:#a1a1aa;font-weight:400;margin:0 6px">@</span> ${homeStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.homeTeam)} ${event.homeScore}</span>`;
+      // Show scores with W/L/T indicators for results
+      let awayIndicator: string;
+      let homeIndicator: string;
+      if (event.awayScore > event.homeScore) {
+        awayIndicator = `<span style="color:#16a34a;font-weight:700;margin-left:4px;font-size:12px">W</span>`;
+        homeIndicator = `<span style="color:#dc2626;font-weight:700;margin-left:4px;font-size:12px">L</span>`;
+      } else if (event.homeScore > event.awayScore) {
+        awayIndicator = `<span style="color:#dc2626;font-weight:700;margin-left:4px;font-size:12px">L</span>`;
+        homeIndicator = `<span style="color:#16a34a;font-weight:700;margin-left:4px;font-size:12px">W</span>`;
+      } else {
+        awayIndicator = `<span style="color:#a1a1aa;font-weight:700;margin-left:4px;font-size:12px">T</span>`;
+        homeIndicator = `<span style="color:#a1a1aa;font-weight:700;margin-left:4px;font-size:12px">T</span>`;
+      }
+      matchupHtml = `${awayStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.awayTeam)} ${event.awayScore}</span>${awayIndicator} <span style="color:#a1a1aa;font-weight:400;margin:0 6px">@</span> ${homeStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.homeTeam)} ${event.homeScore}</span>${homeIndicator}`;
     } else {
       matchupHtml = `${awayStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.awayTeam)}</span> <span style="color:#a1a1aa;font-weight:400;margin:0 6px">@</span> ${homeStar}<span style="font-weight:600;color:#18181b">${escapeHtml(event.homeTeam)}</span>`;
     }

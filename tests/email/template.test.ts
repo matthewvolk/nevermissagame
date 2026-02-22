@@ -78,6 +78,13 @@ describe("buildEmailHtml", () => {
     expect(html).toContain("Upcoming Games");
   });
 
+  test("shows W indicator for winning team and L for losing team", () => {
+    const html = buildEmailHtml(mockResults, [], new Date("2026-02-22"));
+    // Home Team scored 110 (winner), Away Team scored 105 (loser)
+    expect(html).toContain('Home Team 110</span><span style="color:#16a34a;font-weight:700;margin-left:4px;font-size:12px">W</span>');
+    expect(html).toContain('Away Team 105</span><span style="color:#dc2626;font-weight:700;margin-left:4px;font-size:12px">L</span>');
+  });
+
   test("shows +N more when truncated", () => {
     const section: LeagueSection = {
       leagueId: "nba",
