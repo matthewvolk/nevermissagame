@@ -29,6 +29,8 @@ export type ESPNStatus = {
     state: "pre" | "in" | "post";
     completed: boolean;
     description: string;
+    detail?: string;
+    shortDetail?: string;
   };
 };
 
@@ -51,6 +53,7 @@ export type ESPNVenue = {
 export type ESPNCompetitor = {
   id: string;
   homeAway?: "home" | "away";
+  order?: number;
   team?: {
     displayName: string;
     shortDisplayName: string;
@@ -65,6 +68,11 @@ export type ESPNCompetitor = {
   records?: Array<{
     type: string;
     summary: string;
+  }>;
+  linescores?: Array<{
+    value: number;
+    displayValue: string;
+    period: number;
   }>;
 };
 

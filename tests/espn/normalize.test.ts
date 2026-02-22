@@ -111,6 +111,53 @@ describe("normalizeTournamentEvent", () => {
     expect(result!.headline).toBeDefined();
     expect(result!.date).toBeInstanceOf(Date);
   });
+
+  test("extracts top-10 leaderboard from golf tournament", () => {
+    const event = events[0]!;
+    const result = normalizeTournamentEvent(event, "golf");
+
+    expect(result).not.toBeNull();
+    expect(result!.leaderboard).toBeDefined();
+    expect(result!.leaderboard!.length).toBe(10);
+  });
+
+  test("leaderboard first entry has correct data", () => {
+    const event = events[0]!;
+    const result = normalizeTournamentEvent(event, "golf");
+
+    const first = result!.leaderboard![0]!;
+    expect(first.position).toBe(1);
+    expect(first.name).toBe("Jacob Bridgeman");
+    expect(first.score).toBe("-19");
+  });
+
+  test("leaderboard is sorted by position", () => {
+    const event = events[0]!;
+    const result = normalizeTournamentEvent(event, "golf");
+
+    const positions = result!.leaderboard!.map((e) => e.position);
+    for (let i = 1; i < positions.length; i++) {
+      expect(positions[i]!).toBeGreaterThanOrEqual(positions[i - 1]!);
+    }
+  });
+
+  test("leaderboard detects tied positions", () => {
+    const event = events[0]!;
+    const result = normalizeTournamentEvent(event, "golf");
+
+    // Kurt Kitayama and Xander Schauffele are both at -10 (positions 5-6)
+    const tied = result!.leaderboard!.filter((e) => e.score === "-10");
+    expect(tied.length).toBe(2);
+    expect(tied[0]!.position).toBe(tied[1]!.position);
+  });
+
+  test("extracts statusDetail from competition status", () => {
+    const event = events[0]!;
+    const result = normalizeTournamentEvent(event, "golf");
+
+    expect(result!.statusDetail).toBeDefined();
+    expect(result!.statusDetail).toContain("Round");
+  });
 });
 
 describe("normalizeFightEvent", () => {

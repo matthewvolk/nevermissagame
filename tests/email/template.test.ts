@@ -85,6 +85,50 @@ describe("buildEmailHtml", () => {
     expect(html).toContain('Away Team 105</span><span style="color:#dc2626;font-weight:700;margin-left:4px;font-size:12px">L</span>');
   });
 
+  test("renders leaderboard for tournament events", () => {
+    const golfResults: LeagueSection[] = [
+      {
+        leagueId: "golf",
+        leagueName: "Golf",
+        colors: { bg: "#006747", text: "#ffffff" },
+        events: [
+          {
+            id: "10",
+            leagueId: "golf",
+            name: "The Genesis Invitational",
+            shortName: "Genesis",
+            date: new Date("2026-02-22T00:00:00Z"),
+            status: "in_progress",
+            headline: "The Genesis Invitational",
+            statusDetail: "Round 4 - In Progress",
+            leaderboard: [
+              { position: 1, name: "Jacob Bridgeman", score: "-19", today: "-7" },
+              { position: 2, name: "Rory McIlroy", score: "-13", today: "-5" },
+              { position: 3, name: "Aldrich Potgieter", score: "-12", today: "-4" },
+              { position: 4, name: "Aaron Rai", score: "-11", today: "-3" },
+              { position: 5, name: "Kurt Kitayama", score: "-10", today: "-2" },
+              { position: 5, name: "Xander Schauffele", score: "-10", today: "-2" },
+            ],
+          },
+        ],
+        totalCount: 1,
+      },
+    ];
+
+    const html = buildEmailHtml(golfResults, [], new Date("2026-02-22"));
+
+    expect(html).toContain("The Genesis Invitational");
+    expect(html).toContain("Jacob Bridgeman");
+    expect(html).toContain("-19");
+    expect(html).toContain("Rory McIlroy");
+    expect(html).toContain("ROUND 4 - IN PROGRESS");
+    // Tied position prefix
+    expect(html).toContain("T5");
+    // Today column
+    expect(html).toContain("Today");
+    expect(html).toContain("-7");
+  });
+
   test("shows +N more when truncated", () => {
     const section: LeagueSection = {
       leagueId: "nba",

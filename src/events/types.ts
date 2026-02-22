@@ -1,5 +1,12 @@
 export type EventStatus = "scheduled" | "in_progress" | "completed";
 
+export type LeaderboardEntry = {
+  position: number;
+  name: string;
+  score: string;
+  today?: string;
+};
+
 export type SportEvent = {
   id: string;
   leagueId: string;
@@ -25,6 +32,8 @@ export type SportEvent = {
   broadcast?: string;
   note?: string;
   espnUrl?: string;
+  leaderboard?: LeaderboardEntry[];
+  statusDetail?: string;
 };
 
 export type LeagueSection = {

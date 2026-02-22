@@ -1,5 +1,9 @@
 import type { ESPNCompetitor, ESPNEvent } from "./types.ts";
-import type { EventStatus, SportEvent } from "../events/types.ts";
+import type {
+  EventStatus,
+  LeaderboardEntry,
+  SportEvent,
+} from "../events/types.ts";
 import type { LeagueConfig } from "../config.ts";
 import { createLogger } from "../utils/logger.ts";
 
@@ -104,6 +108,55 @@ export function normalizeMatchupEvent(
   }
 }
 
+function extractLeaderboard(event: ESPNEvent): LeaderboardEntry[] | undefined {
+  const competitors = event.competitions?.[0]?.competitors;
+  if (!competitors) return undefined;
+
+  const valid = competitors.filter(
+    (c) => c.order !== undefined && c.athlete?.displayName,
+  );
+  if (valid.length === 0) return undefined;
+
+  valid.sort((a, b) => a.order! - b.order!);
+  const top = valid.slice(0, 10);
+
+  // Assign positions: players with the same score share the same position
+  const entries: LeaderboardEntry[] = [];
+  for (let i = 0; i < top.length; i++) {
+    const c = top[i]!;
+    // Find "today" score from the last round with an actual score
+    const lastRound = c.linescores?.findLast(
+      (l) => l.displayValue !== "-" && l.displayValue !== "",
+    );
+
+    // Position: if this player's score matches a previous player's score,
+    // use that player's position (tied)
+    let position = i + 1;
+    for (let j = i - 1; j >= 0; j--) {
+      if (top[j]!.score === c.score) {
+        position = entries[j]!.position;
+        break;
+      } else {
+        break;
+      }
+    }
+
+    entries.push({
+      position,
+      name: c.athlete!.displayName,
+      score: c.score ?? "E",
+      today: lastRound?.displayValue,
+    });
+  }
+
+  return entries;
+}
+
+function extractStatusDetail(event: ESPNEvent): string | undefined {
+  const compStatus = event.competitions?.[0]?.status;
+  return compStatus?.type?.shortDetail ?? compStatus?.type?.detail;
+}
+
 export function normalizeTournamentEvent(
   event: ESPNEvent,
   leagueId: string,
@@ -121,6 +174,8 @@ export function normalizeTournamentEvent(
       broadcast: extractBroadcast(event),
       note: extractNote(event),
       espnUrl: extractEspnUrl(event),
+      leaderboard: extractLeaderboard(event),
+      statusDetail: extractStatusDetail(event),
     };
   } catch (err) {
     log.warn(`Failed to normalize tournament event ${event.id}: ${err}`);

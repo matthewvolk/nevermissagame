@@ -39,9 +39,14 @@ export async function fetchYesterdayResults(
 
     const events = await fetchLeagueEvents(league, dateRange);
 
-    // Filter to only completed events
+    // Filter to completed events, plus in-progress tournaments (for leaderboards)
     const completed = events
-      .filter((e) => e.status === "completed")
+      .filter((e) => {
+        if (e.status === "completed") return true;
+        if (e.status === "in_progress" && league.displayType === "tournament")
+          return true;
+        return false;
+      })
       .sort((a, b) => a.date.getTime() - b.date.getTime());
 
     if (completed.length === 0) continue;

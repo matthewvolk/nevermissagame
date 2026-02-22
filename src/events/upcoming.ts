@@ -47,8 +47,13 @@ export async function fetchUpcomingEvents(
     const events = await fetchLeagueEvents(league, dateRange);
 
     // Filter to only scheduled/upcoming events, sort by date
+    // Exclude in-progress tournaments (they appear in results with a leaderboard)
     const upcoming = events
       .filter((e) => e.status === "scheduled" || e.status === "in_progress")
+      .filter(
+        (e) =>
+          !(e.status === "in_progress" && league.displayType === "tournament"),
+      )
       .sort((a, b) => a.date.getTime() - b.date.getTime());
 
     if (upcoming.length === 0) continue;

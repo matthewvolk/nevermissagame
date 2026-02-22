@@ -43,6 +43,85 @@ function renderGameRow(
       <p style="margin:1px 0 0;font-size:12px;color:${timeColor};${timeWeight}">${escapeHtml(timeStr)}${broadcastHtml}</p>`;
   }
 
+  // Leaderboard events (golf tournaments)
+  if (event.leaderboard && event.leaderboard.length > 0) {
+    const hasToday = event.leaderboard.some((e) => e.today);
+
+    // Status label
+    let statusLabel: string;
+    let statusColor: string;
+    if (event.status === "completed") {
+      statusLabel = "FINAL";
+      statusColor = "#c9500e";
+    } else {
+      statusLabel = event.statusDetail
+        ? escapeHtml(event.statusDetail).toUpperCase()
+        : "IN PROGRESS";
+      statusColor = "#2563eb";
+    }
+
+    // Build leaderboard rows
+    const leaderboardRows = event.leaderboard
+      .map((entry, i) => {
+        const bg = i % 2 === 0 ? "#fafafa" : "#ffffff";
+        const bold = i < 3 ? "font-weight:600;" : "";
+
+        // Show "T" prefix when position matches adjacent entry
+        const prevSamePos =
+          i > 0 && event.leaderboard![i - 1]!.position === entry.position;
+        const nextSamePos =
+          i < event.leaderboard!.length - 1 &&
+          event.leaderboard![i + 1]!.position === entry.position;
+        const isTied = prevSamePos || nextSamePos;
+        const posStr = isTied ? `T${entry.position}` : `${entry.position}`;
+
+        const todayCell = hasToday
+          ? `<td style="padding:3px 8px;font-size:12px;${bold}color:#52525b;text-align:right">${entry.today ? escapeHtml(entry.today) : ""}</td>`
+          : "";
+
+        return `<tr style="background-color:${bg}">
+          <td style="padding:3px 8px;font-size:12px;${bold}color:#52525b;text-align:right;width:32px">${posStr}</td>
+          <td style="padding:3px 8px;font-size:12px;${bold}color:#18181b">${escapeHtml(entry.name)}</td>
+          <td style="padding:3px 8px;font-size:12px;${bold}color:#18181b;text-align:right">${escapeHtml(entry.score)}</td>
+          ${todayCell}
+        </tr>`;
+      })
+      .join("");
+
+    const todayHeader = hasToday
+      ? `<th style="padding:3px 8px;font-size:11px;font-weight:600;color:#a1a1aa;text-align:right;text-transform:uppercase">Today</th>`
+      : "";
+
+    return `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom:${isLast ? "none" : "1px solid #f4f4f5"}">
+      <tr>
+        <td style="width:3px;background-color:${borderColor};border-radius:2px"></td>
+        <td style="padding:12px 14px">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="vertical-align:top">
+                <p style="margin:0;font-size:14px;font-weight:600;color:#18181b;line-height:1.4">${escapeHtml(event.headline || event.name)}</p>
+              </td>
+              <td style="text-align:right;vertical-align:top;white-space:nowrap">
+                <p style="margin:0;font-size:12px;color:#52525b;line-height:1.4">${escapeHtml(dateStr)}</p>
+                <p style="margin:1px 0 0;font-size:11px;font-weight:600;color:${statusColor};text-transform:uppercase;letter-spacing:0.04em">${statusLabel}</p>
+              </td>
+            </tr>
+          </table>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;border:1px solid #e4e4e7;border-radius:4px;border-collapse:separate">
+            <tr style="border-bottom:1px solid #e4e4e7">
+              <th style="padding:3px 8px;font-size:11px;font-weight:600;color:#a1a1aa;text-align:right;text-transform:uppercase;width:32px">Pos</th>
+              <th style="padding:3px 8px;font-size:11px;font-weight:600;color:#a1a1aa;text-align:left;text-transform:uppercase">Player</th>
+              <th style="padding:3px 8px;font-size:11px;font-weight:600;color:#a1a1aa;text-align:right;text-transform:uppercase">Score</th>
+              ${todayHeader}
+            </tr>
+            ${leaderboardRows}
+          </table>
+        </td>
+      </tr>
+    </table>`;
+  }
+
   // Two-team events: stacked layout
   if (event.awayTeam && event.homeTeam) {
     // Build per-team line content
