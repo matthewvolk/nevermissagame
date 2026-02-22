@@ -1,0 +1,20 @@
+name: Daily Sports Forecast Email
+on:
+  schedule:
+    - cron: '0 11 * * *' # 6 AM EST / 7 AM EDT
+  workflow_dispatch: {} # Manual trigger for testing
+jobs:
+  send-email:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.9'
+      - run: bun install --frozen-lockfile
+      - run: bun run src/index.ts
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          EMAIL_FROM: ${{ vars.EMAIL_FROM }}
