@@ -43,6 +43,12 @@ function renderGameRow(
       <p style="margin:1px 0 0;font-size:12px;color:${timeColor};${timeWeight}">${escapeHtml(timeStr)}${broadcastHtml}</p>`;
   }
 
+  // Wrap entire content cell in a link when ESPN URL is available
+  const contentTdOpen = event.espnUrl
+    ? `<td><a href="${escapeHtml(event.espnUrl)}" style="display:block;padding:12px 14px;color:inherit;text-decoration:none" target="_blank">`
+    : `<td style="padding:12px 14px">`;
+  const contentTdClose = event.espnUrl ? `</a></td>` : `</td>`;
+
   // Leaderboard events (golf tournaments)
   if (event.leaderboard && event.leaderboard.length > 0) {
     const hasToday = event.leaderboard.some((e) => e.today);
@@ -96,7 +102,7 @@ function renderGameRow(
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom:${isLast ? "none" : "1px solid #f4f4f5"}">
       <tr>
         <td style="width:3px;background-color:${borderColor};border-radius:2px"></td>
-        <td style="padding:12px 14px">
+        ${contentTdOpen}
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
             <tr>
               <td style="vertical-align:top">
@@ -117,7 +123,7 @@ function renderGameRow(
             </tr>
             ${leaderboardRows}
           </table>
-        </td>
+        ${contentTdClose}
       </tr>
     </table>`;
   }
@@ -186,7 +192,7 @@ function renderGameRow(
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom:${isLast ? "none" : "1px solid #f4f4f5"}">
       <tr>
         <td style="width:3px;background-color:${borderColor};border-radius:2px"></td>
-        <td style="padding:12px 14px">
+        ${contentTdOpen}
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
             <tr>
               <td style="width:18px;vertical-align:top">${awayStarred ? star : ""}</td>
@@ -205,7 +211,7 @@ function renderGameRow(
             </tr>
             ${noteRow}
           </table>
-        </td>
+        ${contentTdClose}
       </tr>
     </table>`;
   }
@@ -228,7 +234,7 @@ function renderGameRow(
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom:${isLast ? "none" : "1px solid #f4f4f5"}">
       <tr>
         <td style="width:3px;background-color:${borderColor};border-radius:2px"></td>
-        <td style="padding:12px 14px">
+        ${contentTdOpen}
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
             <tr>
               <td style="vertical-align:top">
@@ -240,7 +246,7 @@ function renderGameRow(
               </td>
             </tr>
           </table>
-        </td>
+        ${contentTdClose}
       </tr>
     </table>`;
 }
