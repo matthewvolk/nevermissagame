@@ -188,7 +188,13 @@ export function normalizeFightEvent(
   leagueId: string,
 ): SportEvent | null {
   try {
-    const competition = event.competitions?.[0];
+    // UFC cards have multiple competitions (fights) — pick the main event.
+    // Main events have 5 rounds; fall back to the last competition on the card.
+    const competitions = event.competitions ?? [];
+    const competition =
+      competitions.findLast(
+        (c) => c.format?.regulation?.periods === 5,
+      ) ?? competitions.at(-1);
     let homeTeam: string | undefined;
     let awayTeam: string | undefined;
     let homeTeamAbbr: string | undefined;
