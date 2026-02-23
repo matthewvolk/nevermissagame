@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { createLogger } from "../utils/logger.ts";
+import { todayET } from "../utils/dates.ts";
 
 const log = createLogger("email");
 
@@ -21,9 +22,9 @@ export async function sendEmail(html: string): Promise<void> {
   log.info(`Sending email to ${to} from ${from}`);
 
   const { data, error } = await resend.emails.send({
-    from: `Sports Forecast <${from}>`,
+    from: `Never Miss a Game <${from}>`,
     to: to.split(",").map((e) => e.trim()),
-    subject: "Your Daily Sports Forecast",
+    subject: `Never Miss a Game — ${new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "America/New_York" }).format(todayET())}`,
     html,
   });
 

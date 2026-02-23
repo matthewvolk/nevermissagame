@@ -52,8 +52,8 @@ describe("buildEmailHtml", () => {
     const html = buildEmailHtml(mockResults, mockUpcoming, new Date("2026-02-22"));
 
     expect(html).toContain("<!DOCTYPE html>");
-    expect(html).toContain("Weekly Rundown");
-    expect(html).toContain("Upcoming Games");
+    expect(html).toContain("Daily Digest");
+    expect(html).toContain("Never Miss a Game");
     expect(html).toContain("Yesterday");
     expect(html).toContain("FINAL");
     expect(html).toContain("NBA");
@@ -75,7 +75,7 @@ describe("buildEmailHtml", () => {
   test("omits results section when empty", () => {
     const html = buildEmailHtml([], mockUpcoming, new Date("2026-02-22"));
     expect(html).not.toContain("Yesterday");
-    expect(html).toContain("Upcoming Games");
+    expect(html).toContain("Never Miss a Game");
   });
 
   test("shows W indicator for winning team and L for losing team", () => {

@@ -8,7 +8,7 @@ import { createDefaultProvider } from "./favorites/provider.ts";
 const log = createLogger("main");
 
 async function main() {
-  log.info("Starting Sports Forecast email generation");
+  log.info("Starting Never Miss a Game email generation");
 
   const provider = createDefaultProvider();
   const preferences = await provider.getPreferences();

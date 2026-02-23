@@ -60,7 +60,7 @@ export function buildEmailHtml(
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sports Forecast</title>
+  <title>Never Miss a Game</title>
 </head>
 <body style="margin:0;padding:0;background-color:#f4f4f5;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif">
   <div style="background-color:#f4f4f5;padding:20px 0">
@@ -71,8 +71,8 @@ export function buildEmailHtml(
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
             <tr>
               <td>
-                <p style="margin:0;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#a1a1aa">Weekly Rundown</p>
-                <h1 style="margin:6px 0 0;font-size:22px;font-weight:700;color:#fafafa;line-height:1.2">Upcoming Games</h1>
+                <p style="margin:0;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#a1a1aa">Daily Digest</p>
+                <h1 style="margin:6px 0 0;font-size:22px;font-weight:700;color:#fafafa;line-height:1.2">Never Miss a Game</h1>
               </td>
               <td style="text-align:right;vertical-align:bottom">
                 <p style="margin:0;font-size:12px;color:#71717a">${dateRangeStr}</p>
@@ -104,7 +104,7 @@ export function buildEmailHtml(
       <tr>
         <td style="background-color:#ffffff;padding:0 24px 28px;border-radius:0 0 8px 8px">
           <p style="margin:0;font-size:11px;color:#a1a1aa;line-height:1.6">
-            You received this because you subscribed to game alerts.<br>
+            You received this because you subscribed to Never Miss a Game.<br>
             All times Eastern. Schedules subject to change.
           </p>
           <p style="margin:12px 0 0;font-size:11px;color:#a1a1aa">
