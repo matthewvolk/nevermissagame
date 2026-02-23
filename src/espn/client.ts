@@ -16,12 +16,12 @@ function sleep(ms: number): Promise<void> {
 export async function fetchScoreboard(
   espnPath: string,
   dateRange: string,
-  groups?: number[],
+  group?: number,
 ): Promise<ESPNScoreboardResponse> {
   const url = new URL(`${ESPN_BASE_URL}/${espnPath}/scoreboard`);
   url.searchParams.set("dates", dateRange);
-  if (groups && groups.length > 0) {
-    url.searchParams.set("groups", groups.join(","));
+  if (group !== undefined) {
+    url.searchParams.set("groups", String(group));
   }
   // Request more results to avoid truncation
   url.searchParams.set("limit", "100");

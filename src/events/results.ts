@@ -9,6 +9,7 @@ import {
   prioritizeTeamEvents,
   truncateWithFavorites,
 } from "../favorites/apply.ts";
+import { resolveLeagueGroups } from "../conferences/resolve.ts";
 
 const log = createLogger("results");
 
@@ -37,7 +38,8 @@ export async function fetchYesterdayResults(
       await sleep(INTER_REQUEST_DELAY_MS);
     }
 
-    const events = await fetchLeagueEvents(league, dateRange);
+    const resolved = resolveLeagueGroups(league, preferences);
+    const events = await fetchLeagueEvents(resolved, dateRange);
 
     // Filter to completed events, plus in-progress tournaments (for leaderboards)
     const completed = events

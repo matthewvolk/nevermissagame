@@ -66,4 +66,71 @@ describe("FilePreferencesProvider", () => {
 
     unlinkSync(path);
   });
+
+  test("loads valid conferencePreferences", async () => {
+    const path = writeTmpFile(
+      "with-conf.json",
+      JSON.stringify({
+        favoriteLeagues: ["cfb"],
+        favoriteTeams: { cfb: ["SDSU"] },
+        conferencePreferences: { cfb: [1, 4, 5, 8, 17] },
+      }),
+    );
+    const provider = new FilePreferencesProvider(path);
+    const prefs = await provider.getPreferences();
+
+    expect(prefs.conferencePreferences).toEqual({ cfb: [1, 4, 5, 8, 17] });
+
+    unlinkSync(path);
+  });
+
+  test("accepts missing conferencePreferences (optional)", async () => {
+    const path = writeTmpFile(
+      "no-conf.json",
+      JSON.stringify({
+        favoriteLeagues: ["mlb"],
+        favoriteTeams: { mlb: ["SD"] },
+      }),
+    );
+    const provider = new FilePreferencesProvider(path);
+    const prefs = await provider.getPreferences();
+
+    expect(prefs.conferencePreferences).toBeUndefined();
+
+    unlinkSync(path);
+  });
+
+  test("rejects conferencePreferences with non-number arrays", async () => {
+    const path = writeTmpFile(
+      "bad-conf.json",
+      JSON.stringify({
+        favoriteLeagues: ["cfb"],
+        favoriteTeams: { cfb: ["SDSU"] },
+        conferencePreferences: { cfb: ["ACC", "Big12"] },
+      }),
+    );
+    const provider = new FilePreferencesProvider(path);
+    const prefs = await provider.getPreferences();
+
+    expect(prefs).toEqual(EMPTY_PREFERENCES);
+
+    unlinkSync(path);
+  });
+
+  test("rejects conferencePreferences that is not an object", async () => {
+    const path = writeTmpFile(
+      "bad-conf-type.json",
+      JSON.stringify({
+        favoriteLeagues: ["cfb"],
+        favoriteTeams: { cfb: ["SDSU"] },
+        conferencePreferences: "invalid",
+      }),
+    );
+    const provider = new FilePreferencesProvider(path);
+    const prefs = await provider.getPreferences();
+
+    expect(prefs).toEqual(EMPTY_PREFERENCES);
+
+    unlinkSync(path);
+  });
 });

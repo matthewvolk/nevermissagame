@@ -1,6 +1,12 @@
 {
   "favoriteLeagues": ["mlb"],
   "favoriteTeams": {
-    "mlb": ["SD"]
+    "mlb": ["SD"],
+    "cbb": ["SDSU"],
+    "cfb": ["SDSU"]
+  },
+  "conferencePreferences": {
+    "cfb": [1, 4, 5, 8, 17],
+    "cbb": [2, 7, 8, 23, 44]
   }
 }

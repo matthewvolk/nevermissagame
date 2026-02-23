@@ -25,6 +25,20 @@ function isValidPreferences(data: unknown): data is UserPreferences {
     if (!values.every((v: unknown) => typeof v === "string")) return false;
   }
 
+  if (obj.conferencePreferences !== undefined) {
+    if (
+      typeof obj.conferencePreferences !== "object" ||
+      obj.conferencePreferences === null
+    )
+      return false;
+
+    const confPrefs = obj.conferencePreferences as Record<string, unknown>;
+    for (const values of Object.values(confPrefs)) {
+      if (!Array.isArray(values)) return false;
+      if (!values.every((v: unknown) => typeof v === "number")) return false;
+    }
+  }
+
   return true;
 }
 

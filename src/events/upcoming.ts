@@ -13,6 +13,7 @@ import {
   prioritizeTeamEvents,
   truncateWithFavorites,
 } from "../favorites/apply.ts";
+import { resolveLeagueGroups } from "../conferences/resolve.ts";
 
 const log = createLogger("upcoming");
 
@@ -44,7 +45,8 @@ export async function fetchUpcomingEvents(
       await sleep(INTER_REQUEST_DELAY_MS);
     }
 
-    const events = await fetchLeagueEvents(league, dateRange);
+    const resolved = resolveLeagueGroups(league, preferences);
+    const events = await fetchLeagueEvents(resolved, dateRange);
 
     // Filter to only scheduled/upcoming events, sort by date
     // Exclude in-progress tournaments (they appear in results with a leaderboard)
