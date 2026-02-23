@@ -45,22 +45,26 @@ export function prioritizeTeamEvents(
   if (!favTeams || favTeams.length === 0) return events;
 
   const favSet = new Set(favTeams.map((t) => t.toUpperCase()));
+  const seenTeams = new Set<string>();
 
   const favorites: SportEvent[] = [];
   const rest: SportEvent[] = [];
 
   for (const event of events) {
-    const homeFav =
-      event.homeTeamAbbr !== undefined &&
-      favSet.has(event.homeTeamAbbr.toUpperCase());
-    const awayFav =
-      event.awayTeamAbbr !== undefined &&
-      favSet.has(event.awayTeamAbbr.toUpperCase());
+    const homeAbbr = event.homeTeamAbbr?.toUpperCase();
+    const awayAbbr = event.awayTeamAbbr?.toUpperCase();
+    const homeFav = homeAbbr !== undefined && favSet.has(homeAbbr);
+    const awayFav = awayAbbr !== undefined && favSet.has(awayAbbr);
 
-    if (homeFav || awayFav) {
+    const homeNew = homeFav && !seenTeams.has(homeAbbr!);
+    const awayNew = awayFav && !seenTeams.has(awayAbbr!);
+
+    if (homeNew || awayNew) {
       const side =
         homeFav && awayFav ? "both" : homeFav ? "home" : "away";
       favorites.push({ ...event, favorited: true, favoritedSide: side });
+      if (homeFav) seenTeams.add(homeAbbr!);
+      if (awayFav) seenTeams.add(awayAbbr!);
     } else {
       rest.push(event);
     }

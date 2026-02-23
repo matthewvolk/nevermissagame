@@ -116,7 +116,8 @@ describe("prioritizeTeamEvents", () => {
     };
     const result = prioritizeTeamEvents(events, "mlb", prefs);
     const favIds = result.filter((e) => e.favorited).map((e) => e.id);
-    expect(favIds).toEqual(["1", "2", "4"]);
+    // Only the first game per favorite team is marked
+    expect(favIds).toEqual(["1", "2"]);
   });
 
   test("preserves chronological order within each group", () => {
@@ -142,11 +143,12 @@ describe("prioritizeTeamEvents", () => {
       favoriteTeams: { mlb: ["SD"] },
     };
     const result = prioritizeTeamEvents(events, "mlb", prefs);
-    // Favorites (2, 3) should maintain their relative order
+    // Only the first SD game (2) is favorited; second SD game (3) is not
     expect(result[0]!.id).toBe("2");
-    expect(result[1]!.id).toBe("3");
-    // Non-favorites after
-    expect(result[2]!.id).toBe("1");
+    expect(result[0]!.favorited).toBe(true);
+    // Non-favorites after, in original order
+    expect(result[1]!.id).toBe("1");
+    expect(result[2]!.id).toBe("3");
   });
 
   test("case-insensitive matching", () => {
