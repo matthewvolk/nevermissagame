@@ -15,13 +15,20 @@ export function formatDateESPN(date: Date): string {
   return `${year}${month}${day}`;
 }
 
-/** Get today's date in ET as a Date object (midnight ET) */
+/** Get today's date in ET as a Date object (noon UTC on the ET date) */
 export function todayET(): Date {
   const now = new Date();
-  const etString = now.toLocaleDateString("en-US", {
+  const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: ET_TIMEZONE,
-  });
-  return new Date(etString);
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(now);
+
+  const year = parts.find((p) => p.type === "year")!.value;
+  const month = parts.find((p) => p.type === "month")!.value;
+  const day = parts.find((p) => p.type === "day")!.value;
+  return new Date(`${year}-${month}-${day}T12:00:00.000Z`);
 }
 
 /** Get yesterday's date in ET */
