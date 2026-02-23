@@ -1,5 +1,12 @@
 {
   "name": "nevermissagame",
+  "description": "A daily sports email digest powered by ESPN and Resend",
+  "author": "matthewvolk",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/matthewvolk/nevermissagame.git"
+  },
   "module": "index.ts",
   "type": "module",
   "private": true,
