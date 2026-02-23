@@ -11,6 +11,10 @@ export type LeagueConfig = {
   maxEvents: number;
   /** Display type for this sport */
   displayType: "matchup" | "tournament" | "event";
+  /** ESPN schedule page slug (e.g., "nba", "college-football") */
+  espnScheduleSlug?: string;
+  /** Additional query path for ESPN schedule URL (e.g., "league/usa.1" for MLS) */
+  espnScheduleQuery?: string;
 };
 
 export const LEAGUES: LeagueConfig[] = [
@@ -23,6 +27,7 @@ export const LEAGUES: LeagueConfig[] = [
     enabled: true,
     maxEvents: 5,
     displayType: "matchup",
+    espnScheduleSlug: "nfl",
   },
   {
     id: "nba",
@@ -33,6 +38,7 @@ export const LEAGUES: LeagueConfig[] = [
     enabled: true,
     maxEvents: 5,
     displayType: "matchup",
+    espnScheduleSlug: "nba",
   },
   {
     id: "mlb",
@@ -43,6 +49,7 @@ export const LEAGUES: LeagueConfig[] = [
     enabled: true,
     maxEvents: 5,
     displayType: "matchup",
+    espnScheduleSlug: "mlb",
   },
   {
     id: "nhl",
@@ -53,6 +60,7 @@ export const LEAGUES: LeagueConfig[] = [
     enabled: true,
     maxEvents: 5,
     displayType: "matchup",
+    espnScheduleSlug: "nhl",
   },
   {
     id: "olympics",
@@ -73,6 +81,7 @@ export const LEAGUES: LeagueConfig[] = [
     enabled: true,
     maxEvents: 5,
     displayType: "matchup",
+    espnScheduleSlug: "college-football",
     // ESPN defaults to top conferences when no groups param is specified
   },
   {
@@ -84,6 +93,7 @@ export const LEAGUES: LeagueConfig[] = [
     enabled: true,
     maxEvents: 5,
     displayType: "matchup",
+    espnScheduleSlug: "mens-college-basketball",
     // ESPN defaults to top conferences when no groups param is specified
   },
   {
@@ -95,6 +105,7 @@ export const LEAGUES: LeagueConfig[] = [
     enabled: true,
     maxEvents: 5,
     displayType: "tournament",
+    espnScheduleSlug: "golf",
   },
   {
     id: "boxing",
@@ -115,6 +126,7 @@ export const LEAGUES: LeagueConfig[] = [
     enabled: true,
     maxEvents: 5,
     displayType: "event",
+    espnScheduleSlug: "mma",
   },
   {
     id: "f1",
@@ -125,6 +137,7 @@ export const LEAGUES: LeagueConfig[] = [
     enabled: true,
     maxEvents: 5,
     displayType: "event",
+    espnScheduleSlug: "f1",
   },
   {
     id: "mls",
@@ -135,6 +148,8 @@ export const LEAGUES: LeagueConfig[] = [
     enabled: true,
     maxEvents: 5,
     displayType: "matchup",
+    espnScheduleSlug: "soccer",
+    espnScheduleQuery: "league/usa.1",
   },
 ];
 

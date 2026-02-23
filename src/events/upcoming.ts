@@ -67,12 +67,19 @@ export async function fetchUpcomingEvents(
       league.maxEvents,
     );
 
+    let scheduleUrl: string | undefined;
+    if (league.espnScheduleSlug) {
+      const query = league.espnScheduleQuery ? `/_/${league.espnScheduleQuery}` : "";
+      scheduleUrl = `https://www.espn.com/${league.espnScheduleSlug}/schedule${query}`;
+    }
+
     sections.push({
       leagueId: league.id,
       leagueName: league.name,
       colors: league.colors,
       events: displayed,
       totalCount,
+      scheduleUrl,
     });
   }
 

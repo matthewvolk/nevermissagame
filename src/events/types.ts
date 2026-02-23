@@ -44,4 +44,5 @@ export type LeagueSection = {
   colors: { bg: string; text: string };
   events: SportEvent[];
   totalCount: number;
+  scheduleUrl?: string;
 };

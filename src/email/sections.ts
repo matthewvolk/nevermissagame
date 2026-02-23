@@ -270,9 +270,12 @@ export function renderLeagueSection(
     )
     .join("");
 
+  const overflowText = `+ ${overflow} more`;
   const overflowHtml =
     overflow > 0
-      ? `<tr><td style="padding:8px 14px 4px;font-size:12px;color:#a1a1aa">+ ${overflow} more</td></tr>`
+      ? section.scheduleUrl
+        ? `<tr><td style="padding:8px 14px 4px;font-size:12px"><a href="${escapeHtml(section.scheduleUrl)}" style="color:#a1a1aa;text-decoration:underline" target="_blank">${overflowText}</a></td></tr>`
+        : `<tr><td style="padding:8px 14px 4px;font-size:12px;color:#a1a1aa">${overflowText}</td></tr>`
       : "";
 
   return `

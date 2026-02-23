@@ -165,7 +165,62 @@ describe("buildEmailHtml", () => {
     expect(html).toContain("FINAL");
   });
 
-  test("shows +N more when truncated", () => {
+  test("shows +N more as link when scheduleUrl is present", () => {
+    const section: LeagueSection = {
+      leagueId: "nba",
+      leagueName: "NBA",
+      colors: { bg: "#c9500e", text: "#ffffff" },
+      events: [
+        {
+          id: "1",
+          leagueId: "nba",
+          name: "Game 1",
+          shortName: "G1",
+          date: new Date("2026-02-22T00:00:00Z"),
+          status: "scheduled",
+          homeTeam: "A",
+          awayTeam: "B",
+        },
+      ],
+      totalCount: 10,
+      scheduleUrl: "https://www.espn.com/nba/schedule",
+    };
+
+    const html = buildEmailHtml([], [section], new Date("2026-02-22"));
+    expect(html).toContain("+ 9 more");
+    expect(html).toContain('href="https://www.espn.com/nba/schedule"');
+    expect(html).toContain("text-decoration:underline");
+  });
+
+  test("shows +N more as link with date-specific URL for results", () => {
+    const section: LeagueSection = {
+      leagueId: "nba",
+      leagueName: "NBA",
+      colors: { bg: "#c9500e", text: "#ffffff" },
+      events: [
+        {
+          id: "1",
+          leagueId: "nba",
+          name: "Game 1",
+          shortName: "G1",
+          date: new Date("2026-02-21T00:00:00Z"),
+          status: "completed",
+          homeTeam: "A",
+          awayTeam: "B",
+          homeScore: 100,
+          awayScore: 95,
+        },
+      ],
+      totalCount: 8,
+      scheduleUrl: "https://www.espn.com/nba/schedule/_/date/20260221",
+    };
+
+    const html = buildEmailHtml([section], [], new Date("2026-02-22"));
+    expect(html).toContain("+ 7 more");
+    expect(html).toContain('href="https://www.espn.com/nba/schedule/_/date/20260221"');
+  });
+
+  test("shows +N more as plain text when scheduleUrl is absent", () => {
     const section: LeagueSection = {
       leagueId: "nba",
       leagueName: "NBA",
@@ -187,5 +242,6 @@ describe("buildEmailHtml", () => {
 
     const html = buildEmailHtml([], [section], new Date("2026-02-22"));
     expect(html).toContain("+ 9 more");
+    expect(html).not.toContain('href="https://www.espn.com/nba/schedule"');
   });
 });
