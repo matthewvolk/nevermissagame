@@ -50,13 +50,13 @@ describe("reorderLeagues", () => {
     makeLeague("nhl", 4),
   ];
 
-  test("favorites come first in specified order", () => {
+  test("returns only favorite leagues in specified order", () => {
     const prefs: UserPreferences = {
       favoriteLeagues: ["mlb", "nhl"],
       favoriteTeams: {},
     };
     const result = reorderLeagues(leagues, prefs);
-    expect(result.map((l) => l.id)).toEqual(["mlb", "nhl", "nfl", "nba"]);
+    expect(result.map((l) => l.id)).toEqual(["mlb", "nhl"]);
   });
 
   test("empty favorites returns original order", () => {
@@ -70,7 +70,7 @@ describe("reorderLeagues", () => {
       favoriteTeams: {},
     };
     const result = reorderLeagues(leagues, prefs);
-    expect(result.map((l) => l.id)).toEqual(["mlb", "nfl", "nba", "nhl"]);
+    expect(result.map((l) => l.id)).toEqual(["mlb"]);
   });
 });
 

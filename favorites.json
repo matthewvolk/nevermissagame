@@ -1,5 +1,5 @@
 {
-  "favoriteLeagues": ["mlb"],
+  "favoriteLeagues": ["mlb", "cfb", "cbb", "golf", "nhl", "nba", "ufc", "f1"],
   "favoriteTeams": {
     "mlb": ["SD", "CHC", "HOU", "LAA"],
     "cbb": ["SDSU", "OU", "TEX"],

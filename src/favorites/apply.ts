@@ -3,9 +3,8 @@ import type { SportEvent } from "../events/types.ts";
 import type { UserPreferences } from "./types.ts";
 
 /**
- * Reorder leagues so favorited leagues appear first (in the order listed
- * in `prefs.favoriteLeagues`), followed by remaining leagues in their
- * original order.
+ * When favoriteLeagues is non-empty, return ONLY those leagues (in the
+ * specified order). When empty, return all leagues in their original order.
  */
 export function reorderLeagues(
   leagues: LeagueConfig[],
@@ -13,22 +12,15 @@ export function reorderLeagues(
 ): LeagueConfig[] {
   if (prefs.favoriteLeagues.length === 0) return leagues;
 
-  const favSet = new Set(prefs.favoriteLeagues);
-  const favLeagues: LeagueConfig[] = [];
-  const rest: LeagueConfig[] = [];
+  const leagueMap = new Map(leagues.map((l) => [l.id, l]));
+  const result: LeagueConfig[] = [];
 
-  // Collect favorites in the order specified by prefs.favoriteLeagues
   for (const favId of prefs.favoriteLeagues) {
-    const found = leagues.find((l) => l.id === favId);
-    if (found) favLeagues.push(found);
+    const found = leagueMap.get(favId);
+    if (found) result.push(found);
   }
 
-  // Remaining leagues in original order
-  for (const league of leagues) {
-    if (!favSet.has(league.id)) rest.push(league);
-  }
-
-  return [...favLeagues, ...rest];
+  return result;
 }
 
 /**

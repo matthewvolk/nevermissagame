@@ -25,7 +25,7 @@ GitHub Actions cron (`.github/workflows/daily-email.yml`) runs daily at 11:00 UT
 - `src/espn/` — ESPN API client with exponential backoff, scoreboard fetching, event normalization
 - `src/events/` — fetch yesterday's results and upcoming games (14-day window), apply filtering
 - `src/email/` — HTML email template builder and Resend send logic
-- `src/favorites/` — load `favorites.json`, reorder leagues, prioritize favorite teams, truncate
+- `src/favorites/` — load `favorites.json`, filter leagues to only those in `favoriteLeagues` (source of truth for which leagues appear and in what order), prioritize favorite teams, truncate
 - `src/conferences/` — resolve ESPN group IDs for college sports conference filtering
 - `src/utils/` — date helpers (all ET timezone), logger
 
