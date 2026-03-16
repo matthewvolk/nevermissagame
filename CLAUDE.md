@@ -34,7 +34,7 @@ GitHub Actions cron (`.github/workflows/daily-email.yml`) runs daily at 11:00 UT
 1. Load `UserPreferences` from `favorites.json`
 2. Fetch yesterday's results and upcoming events in parallel
 3. For each league: resolve conference groups → call ESPN scoreboard API → normalize events → filter by status → apply favorites (reorder, prioritize, truncate)
-4. Build HTML email (upcoming games first, then results)
+4. Build HTML email (results first, then upcoming games)
 5. Send via Resend API
 
 ## Configuration

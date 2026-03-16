@@ -85,8 +85,8 @@ export function buildEmailHtml(
       <!-- Body -->
       <tr>
         <td style="background-color:#ffffff;padding:8px 24px 24px">
-          ${upcomingSectionHtml}
           ${resultsSectionHtml}
+          ${upcomingSectionHtml}
           ${emptyHtml}
 
           <!-- Footer divider -->

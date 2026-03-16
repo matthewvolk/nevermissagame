@@ -6,7 +6,7 @@ A daily sports email digest that delivers yesterday's scores and upcoming games 
 
 Never Miss a Game pulls scores and schedules from the ESPN API, builds an HTML email with results and upcoming games, and sends it via [Resend](https://resend.com). It runs daily as a GitHub Actions cron job — no server required.
 
-You configure which leagues you follow, which teams are your favorites, and which college conferences you care about. Favorite teams are always shown first and never truncated.
+You configure which leagues appear in the email, which teams are your favorites, and which college conferences you care about. Only leagues listed in `favoriteLeagues` are included. Favorite teams are always shown first and never truncated.
 
 ## Prerequisites
 
@@ -50,7 +50,7 @@ Edit `favorites.json` to set your preferences:
 }
 ```
 
-- **favoriteLeagues** — league IDs to prioritize (shown first in the email)
+- **favoriteLeagues** — league IDs to include in the email (only these leagues are shown, in the order listed; empty list shows all leagues)
 - **favoriteTeams** — team abbreviations per league (these games are always shown and never truncated)
 - **conferencePreferences** — ESPN group IDs for college sports (overrides default power conference filtering)
 
